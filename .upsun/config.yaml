@@ -6,7 +6,9 @@ applications:
     type: python:3.12
 
     relationships:
-      database: "postgresql:15"
+      database:
+        service: postgresql
+        endpoint: postgresql
 
     dependencies:
       python3:
@@ -38,5 +40,5 @@ routes:
     upstream: "backend:http"
 
 services:
-  postgres:
+  postgresql:
     type: postgresql:16
