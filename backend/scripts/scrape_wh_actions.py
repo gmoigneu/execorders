@@ -56,10 +56,13 @@ def get_content_summary(content: str) -> tuple[str, str, str]:
     """Get a 500-word summary, tweet-length excerpt, and 500 word explanation of the content using OpenAI."""
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
-    prompt = f"""Please provide two things:
+    prompt = f"""Please provide three things:
 1. A 500-word summary of the following executive order or presidential action
 2. A compelling tweet-length excerpt (max 280 characters) that captures the key point. Be factual and concise. Don't take any liberties with the content or take sides.  Always end with '#USA #POTUS #Trump'.
 3. A 500 word explanation of the executive order or presidential action. Be as factual as possible. Explain the context of the action and the impact it will have on the country. Explain as if the reader is a high school student.
+
+Never add any other text to your response or any other formatting like markdown or html.
+
 Executive Order:
 {content}
 
