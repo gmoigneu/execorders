@@ -40,8 +40,3 @@ def show_order(slug: str):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
-
-
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Union[str, None] = None):
-#     return {"item_id": item_id, "q": q}
