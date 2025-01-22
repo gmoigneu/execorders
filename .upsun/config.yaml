@@ -39,4 +39,4 @@ routes:
 
 services:
   postgres:
-    type: postgres:15
+    type: postgresql:16
