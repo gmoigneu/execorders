@@ -1,7 +1,7 @@
 applications:
   backend:
     source:
-      root: "./backend"
+      root: backend
 
     type: python:3.12
 
