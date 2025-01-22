@@ -7,6 +7,7 @@ class Order(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     url = Column(String, unique=True, index=True)
+    slug = Column(String, unique=True, index=True)
     title = Column(String, nullable=True)
     content = Column(Text, nullable=True)
     summary = Column(Text, nullable=True)

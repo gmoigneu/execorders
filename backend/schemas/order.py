@@ -5,6 +5,7 @@ from typing import Optional
 class OrderBase(BaseModel):
     id: int
     url: str
+    slug: str
     title: Optional[str]
     excerpt: Optional[str]
     published_at: Optional[datetime]

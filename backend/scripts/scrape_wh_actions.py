@@ -9,6 +9,7 @@ import sys
 import time
 import os
 from pathlib import Path
+from slugify import slugify
 
 # Add the parent directory to the Python path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -180,6 +181,7 @@ def scrape_wh_actions(url: str = "https://www.whitehouse.gov/presidential-action
                 if not existing_order:
                     order = Order(url=link, title=title)
                     order.created_at = datetime.datetime.now()
+                    order.slug = slugify(title, max_length=100)
                     db.add(order)
             
             db.commit()

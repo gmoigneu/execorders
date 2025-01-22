@@ -34,9 +34,9 @@ def index_orders(page: int = 1, per_page: int = 10):
     return {"orders": orders, "meta": meta}
 
 
-@app.get("/{order_id}", response_model=OrderShow)
-def show_order(order_id: int):
-    order = db.query(Order).filter(Order.id == order_id).first()
+@app.get("/{slug}", response_model=OrderShow)
+def show_order(slug: str):
+    order = db.query(Order).filter(Order.slug == slug).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
