@@ -55,9 +55,9 @@ applications:
           npx next start -p $PORT
 
 routes:
-  # "https://{default}":
-  #   type: upstream
-  #   upstream: "frontend:http"
+  "https://{default}":
+    type: upstream
+    upstream: "frontend:http"
 
   "https://api.{default}":
     type: upstream
