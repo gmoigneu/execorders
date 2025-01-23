@@ -34,7 +34,7 @@ applications:
     source:
       root: frontend
 
-    type: node:20
+    type: nodejs:20
 
     mounts:
       "/.npm":
