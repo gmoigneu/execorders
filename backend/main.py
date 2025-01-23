@@ -29,7 +29,7 @@ def index_orders(page: int = 1, per_page: int = 10):
     total = db.query(Order).count()
     
     # Get paginated orders
-    orders = db.query(Order).order_by(Order.created_at.desc()).offset(offset).limit(per_page).all()
+    orders = db.query(Order).order_by(Order.published_at.desc()).offset(offset).limit(per_page).all()
     
     # Calculate total pages
     total_pages = (total + per_page - 1) // per_page

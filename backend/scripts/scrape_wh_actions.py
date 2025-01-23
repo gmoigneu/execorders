@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+import json
 from typing import List, Set
 from bs4 import BeautifulSoup
 import requests
@@ -58,24 +59,23 @@ def get_content_summary(content: str) -> tuple[str, str, str]:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     prompt = f"""Please provide three things:
-1. A 500-word summary of the following executive order or presidential action
+1. A 500-word summary of the following executive order or presidential action. You use markdown formatting to make it easier to read and emphasize key points. Do not add a main title or subtitle.
 2. A compelling tweet-length excerpt (max 280 characters) that captures the key point. Be factual and concise. Don't take any liberties with the content or take sides.  Always end with '#USA #POTUS #Trump'.
-3. A 500 word explanation of the executive order or presidential action. Be as factual as possible. Explain the context of the action and the impact it will have on the country. Explain as if the reader is a high school student.
+3. A 300 word explanation of the executive order or presidential action. Be as factual as possible. Explain the context of the action and the impact it will have on the country. Explain as if the reader is a high school student. You use markdown formatting to make it easier to read and emphasize key points. You can use bullet points, bold, and italic formatting. Do not add a main title or subtitle.
 
 Never add any other text to your response or any other formatting like markdown or html.
 
 Executive Order:
 {content}
 
-Format your response exactly like this:
-SUMMARY:
-[500 word summary]
+Format your response as JSON. The response should be a JSON object with the following keys:
+- summary
+- tweet
+- explanation
 
-TWEET:
-[tweet-length excerpt]
-    
-EXPLANATION:
-[500 word explanation of the executive order or presidential action]"""
+Do not include any other text in your response or the json markers.
+
+"""
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -89,12 +89,14 @@ EXPLANATION:
     
     response_text = response.choices[0].message.content
     
-    # Split the response into summary and tweet
-    explanation = response_text.split("EXPLANATION:")[1].strip()
-    excerpt = response_text.split("TWEET:")[1].split("EXPLANATION:")[0].strip()
-    summary = response_text.split("SUMMARY:")[1].split("TWEET:")[0].strip()
-
-    return summary, excerpt, explanation
+    # Parse the response as JSON
+    try:
+        data = json.loads(response_text)
+    except json.JSONDecodeError:
+        print("Failed to parse JSON response", file=sys.stderr)
+        return None, None, None
+    
+    return data.get('summary'), data.get('tweet'), data.get('explanation')
 
 def scrape_article_content(url: str) -> tuple[str, str]:
     """Scrape the content and publication date of an article using WebBaseLoader.

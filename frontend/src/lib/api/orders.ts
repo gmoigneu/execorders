@@ -46,7 +46,6 @@ export async function fetchOrders(page = 1, per_page = 10): Promise<PaginatedRes
     }
 
     const rawData = await response.json()
-    console.log('Raw API response:', rawData)
 
     // Handle both array and paginated response formats
     const data = rawData.data || rawData

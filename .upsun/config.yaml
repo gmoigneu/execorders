@@ -59,6 +59,15 @@ applications:
         start: |
           npx next start -p $PORT
 
+    crons:
+      scrape-wh-actions:
+        spec: "H * * * *"
+        commands: 
+          start: |
+            if [ "$PLATFORM_ENVIRONMENT_TYPE" = production ]; then
+              python scripts/scrape_wh_actions.py
+            fi
+
 routes:
   "https://{default}":
     type: upstream
