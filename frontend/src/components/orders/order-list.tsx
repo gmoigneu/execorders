@@ -38,7 +38,7 @@ export async function OrderList({
           {orders.map(order => (
             <Link 
               key={order.id} 
-              href={`/${order.slug}`}
+              href={`/${order.slug}?from=${currentPage}`}
               className="block p-4 border rounded-lg hover:border-gray-400 transition-colors"
             >
               <h3 className="text-lg font-semibold">{order.title}</h3>

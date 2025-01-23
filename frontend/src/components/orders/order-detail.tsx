@@ -12,14 +12,21 @@ function formatDate(date: Date): string {
   })
 }
 
-export async function OrderDetail({ slug }: { slug: string }) {
+export async function OrderDetail({ 
+  slug,
+  fromPage
+}: { 
+  slug: string
+  fromPage?: string
+}) {
   try {
     const order = await fetchOrderBySlug(slug)
+    const backUrl = fromPage ? `/?page=${fromPage}` : '/'
 
     return (
       <article className="space-y-4">
         <div className="mb-6">
-          <Link href="/" className="text-blue-500 hover:text-blue-700">
+          <Link href={backUrl} className="text-blue-500 hover:text-blue-700">
             ← Back to Executive Orders
           </Link>
         </div>

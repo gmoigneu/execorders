@@ -1,5 +1,5 @@
 import { OrderList } from '@/components/orders/order-list'
-import { Suspense } from 'react'
+import { Suspense, use } from 'react'
 import { Metadata } from 'next'
 
 // Add route segment config
@@ -15,12 +15,15 @@ export const metadata: Metadata = {
   }
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+export default function HomePage(props: {
+  searchParams: SearchParams
 }) {
-  const page = typeof searchParams.page === 'string' ? Number(searchParams.page) : 1
+  const searchParams = use(props.searchParams)
+  const { page } = searchParams
+
+  const pageNumber = typeof page === 'string' ? Number(page) : 1
   
   return (
     <main className="container mx-auto p-4">
@@ -35,7 +38,7 @@ export default async function HomePage({
       </p>
       
       <Suspense fallback={<div>Loading orders...</div>}>
-        <OrderList page={page} />
+        <OrderList page={pageNumber} />
       </Suspense>
     </main>
   )

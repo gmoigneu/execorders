@@ -1,30 +1,24 @@
 import { OrderDetail } from '@/components/orders/order-detail'
 import { Suspense } from 'react'
 import { fetchOrderBySlug } from '@/lib/api/orders'
-import { Metadata } from 'next'
 
 // Add route segment config
 export const revalidate = 3600 // revalidate every hour
 
-type Props = {
-  params: { slug: string }
-}
+import { use } from 'react'
 
-interface OrderDetailProps {
-  params: { slug: string }
-}
+type Params = Promise<{ slug: string }>
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+ 
 
 // Helper function to safely format dates for metadata
 function formatMetadataDate(date: Date): string {
   return date.toISOString().split('.')[0] + 'Z'
 }
 
-export async function generateMetadata(
-  { params }: OrderDetailProps,
-): Promise<Metadata> {
-  const slug = (await params).slug
+export async function generateMetadata({ params }: { params: Params }) {
+  const {slug} = await params
   const order = await fetchOrderBySlug(slug)
-  
   const publishedTime = formatMetadataDate(order.published_at)
   const modifiedTime = formatMetadataDate(order.created_at)
 
@@ -47,11 +41,22 @@ export async function generateMetadata(
   }
 }
 
-export default function OrderPage({ params }: Props) {
+export default function Page(props: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const params = use(props.params)
+  const searchParams = use(props.searchParams)
+  const { slug } = params
+  const { from } = searchParams
+
   return (
     <main className="container mx-auto p-4">
       <Suspense fallback={<div>Loading order...</div>}>
-        <OrderDetail slug={params.slug} />
+        <OrderDetail 
+          slug={slug}
+          fromPage={from as string}
+        />
       </Suspense>
     </main>
   )

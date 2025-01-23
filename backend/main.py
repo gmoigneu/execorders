@@ -4,8 +4,17 @@ from fastapi import FastAPI, HTTPException
 from models.order import Order
 from schemas.order import OrderIndex, OrderShow
 from database import get_db
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 db = next(get_db())
 load_dotenv()
