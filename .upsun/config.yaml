@@ -44,6 +44,11 @@ applications:
         source: "storage"
         source_path: "cache"
 
+    relationships:
+      backend:
+        service: backend
+        endpoint: http
+
     hooks:
       build: |
         npm install
@@ -58,10 +63,6 @@ routes:
   "https://{default}":
     type: upstream
     upstream: "frontend:http"
-
-  "https://api.{default}":
-    type: upstream
-    upstream: "backend:http"
 
 services:
   postgresql:
