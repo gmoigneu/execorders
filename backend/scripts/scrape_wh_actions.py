@@ -181,12 +181,16 @@ def scrape_wh_actions(url: str = "https://www.whitehouse.gov/presidential-action
                 # Check if URL already exists
                 existing_order = db.query(Order).filter(Order.url == link).first()
                 if not existing_order:
+                    print(f"Adding new order: {link}", file=sys.stderr)
                     order = Order(url=link, title=title)
                     order.created_at = datetime.datetime.now()
                     order.slug = slugify(title, max_length=100)
-                    db.add(order)
-            
-            db.commit()
+                    try:
+                        db.add(order)
+                        db.commit()  # Commit after each addition to ensure unique constraint is checked
+                    except Exception as e:
+                        db.rollback()  # Rollback if an error occurs to maintain data integrity
+                        print(f"Error adding order: {str(e)}", file=sys.stderr)
 
             time.sleep(1)
         
